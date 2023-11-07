@@ -1,0 +1,28 @@
+
+version: '3.6'
+services:
+  postgres:
+    image: postgres
+    restart: always
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_DB=pod
+
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./docker_postgres_init.sql:/docker-entrypoint-initdb.d/docker_postgres_init.sql
+
+  api:
+    build: .
+    ports:
+      - 3000:3000
+    environment:
+      - DBHOST=localhost
+	  - DBPORT=5432
+	  - DBUSER=postgres
+	  - DBPASSWORD=password
+	  - DBNAME=pod
+    depends_on:
+      - db
